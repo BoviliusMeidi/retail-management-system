@@ -1,0 +1,14 @@
+npx --no -- commitlint --edit "$1" > /dev/null 2>&1 || {
+    echo ""
+    echo "[X] COMMIT REJECTED: Invalid commit format!"
+    echo "-------------------------------------------------------"
+    echo "Format  : type(scope): your commit message"
+    echo "Allowed : feat, chore, fix, refactor"
+    echo "-------------------------------------------------------"
+    echo "Examples:"
+    echo "  feat(api): add product module"
+    echo "  fix(web): resolve hydration mismatch"
+    echo "  chore(monorepo): update prisma config"
+    echo ""
+    exit 1
+}
