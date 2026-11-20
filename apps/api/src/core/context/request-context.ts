@@ -1,9 +1,16 @@
 import { AsyncLocalStorage } from "async_hooks";
 import { DEFAULT_LANG, SupportedLang } from "@repo/shared";
 
+export interface ErrorOriginContext {
+    origin: string;
+    input: unknown;
+    durationMs: number;
+}
+
 export interface RequestContextStore {
     traceId: string;
-    lang: SupportedLang
+    lang: SupportedLang;
+    errorOrigin?: ErrorOriginContext;
 }
 
 export class RequestContext {
@@ -23,5 +30,16 @@ export class RequestContext {
 
     static getLang(): SupportedLang {
         return this.storage.getStore()?.lang ?? DEFAULT_LANG;
+    }
+
+    static setErrorOrigin(context: ErrorOriginContext): void {
+        const store = this.storage.getStore();
+        if(store && !store.errorOrigin) {
+            store.errorOrigin = context;
+        }
+    }
+
+    static getErrorOrigin(): ErrorOriginContext | undefined {
+        return this.storage.getStore()?.errorOrigin;
     }
 }
